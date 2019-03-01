@@ -1,6 +1,6 @@
 import time, os, sys, datetime
 
-#format
+#for
 #reworking
 
 '''Programm for counting your time work'''
