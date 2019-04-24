@@ -38,7 +38,7 @@ class Army():
 
 
 
-class Battle():
+class Armies():
     def __init__(self, armies):
         # цикл ниже, разделяет все армии по
         # отдельным индексам в списке

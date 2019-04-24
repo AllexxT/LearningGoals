@@ -1,7 +1,9 @@
-from databattle import json, showJson
 import time
 import _thread
 import threading
+import random
+import databattle
+import battle
 
 
 lock = threading.Lock()
@@ -9,27 +11,44 @@ lock = threading.Lock()
 
 player1 = {
     'health': 100,
-    'recharge': 800,
-    'damage': 9
+    'recharge': 100,
     }
 
 player2 = {
     'health': 100,
-    'recharge': 400,
-    'damage': 9
+    'recharge': 100,
     }
 
 class Unit():
     def __init__(self, player):
+        self.experience = 0
         self.health = player['health']
         self.recharge = player['recharge']
-        self.damage = player['damage']
+        self.damage = self.dmg()
+        self.hitRating = self.hitR()
+
+    def hitR(self):
+        hr = 0.5 * (1 + self.health/100) * random.randint(50 + self.experience, 100) / 100
+        self.hitRating = hr
+        return hr
+    
+    def dmg(self):
+        dmg = 0.05 + self.experience / 100
+        self.damage = dmg
+        return dmg
+    
     def __repr__(self):
         info = 'Health - %d\nRecharge - %d\nDamage - %d'
         values = (self.health, self.recharge, self.damage)
         return info % values
     def __sub__(self, other):
-        self.health = self.health - other.damage
+        if self.hitRating > other.hitR():
+            self.health = self.health - other.damage
+            if self.experience < 50:
+                self.experience += 1
+        else:
+            print('Miss')
+            
 
 class Battle():
     def __init__(self, squad1, squad2):
@@ -41,16 +60,15 @@ class Battle():
         
     # метод нанесения урона, выполняющийся асинхронно
     # для каждой из двух армий
-    def dmgToEnemy(self, arg1, arg2, arg3, arg4):
-        while arg1.health > 0 and arg2.health > 0:
-            time.sleep(arg1.recharge / 1000)
+    def dmgToEnemy(self, sq1, sq2, nameSq1, nameSq2):
+        while sq1.health > 0 and sq2.health > 0:
+            time.sleep(sq1.recharge / 1000)
             lock.acquire()
-            if arg1.health > 0:
-                arg2 - arg1
-                print('Squad',arg3,'hit ->' ,arg4, arg2.health, end=' ')
-                print(self.hpbar(arg2))
-                if arg2.health <= 0:
-                    print('Squad', arg3, 'is winner\n')
+            if sq1.health > 0:
+                sq2 - sq1
+                print('Squad',nameSq1,'hit ->' ,nameSq2, sq2.health)
+                if sq2.health <= 0:
+                    print('Squad', nameSq1, 'is winner\n')
             lock.release()
                     
     def display(self):
@@ -58,15 +76,15 @@ class Battle():
         print('Squad 2 -> ' + str(self.squad2.health))
         
     def fight(self):
-        _thread.start_new_thread(self.dmgToEnemy, (self.squad1, self.squad2, 'one', 'Second'))
-        _thread.start_new_thread(self.dmgToEnemy, (self.squad2, self.squad1, 'Second', 'one'))
+        _thread.start_new_thread(self.dmgToEnemy, (self.squad1, self.squad2, 'Grihi', 'Arsena'))
+        _thread.start_new_thread(self.dmgToEnemy, (self.squad2, self.squad1, 'Arsena', 'Grihi'))
     
 
 playa1 = Unit(player1)
 playa2 = Unit(player2)
 
 battle = Battle(playa1, playa2)
-battle.fight()
+#battle.fight()
 
 
 
