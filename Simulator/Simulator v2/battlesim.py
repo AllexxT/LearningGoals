@@ -65,7 +65,7 @@ class Squad():
         else:
             print('Not found')
     def __repr__(self):
-        info = '\nVehicles - %d; Soldiers - %d' % (len(self.soldiers), len(self.vehicles))
+        info = '\nVehicles - %d; Soldiers - %d' % (len(self.vehicles), len(self.soldiers))
         return info
 
 # класс обрабатывающий одну армию
@@ -83,7 +83,7 @@ class Army():
             self.squads.append(Squad(squad))
 
 
-
+# класс всех армий
 class Countries():
     def __init__(self, armies):
         # цикл ниже, разделяет все армии по
@@ -91,15 +91,22 @@ class Countries():
         self.army = []
         self.armies = armies
         for x in self.armies['armies']:
-           
             self.army.append(Army(x))
-        print(len(self.army))
+        #print(len(self.army))
 
     def __getitem__(self, key):
         return self.army[key]
 
     def __repr__(self):
         return str(self.army)
+
+
+class Battle():
+    def __init__(self, json):
+        self.cntries = Countries(json)
+    
+
+
 
 
     
