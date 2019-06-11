@@ -152,10 +152,10 @@ def toRoma(num):
 
 
 def convert(num):
-    if type(num) == str:
+    if ord(str(num)[0]) in range(65, 90):
         return toArabic(num)
     else:
-        return toRoma(num)
+        return toRoma(int(num))
 
 
 
