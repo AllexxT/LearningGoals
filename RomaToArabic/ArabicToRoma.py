@@ -171,10 +171,11 @@ if __name__ == '__main__':
             assert convert(rm[x]) == arab[x], 'Test №%d is FAILED!' % x
             print('{} -> {}'.format(rm[x], arab[x]))
             print('test %s is passed' % str(x+1))
-        print('Testing arabic to roma numbers convertation')
+        print('\nTesting arabic to roma numbers convertation')
         for x in range(len(rm)):
             assert convert(arab[x]) == rm[x], 'Test №%d is FAILED!' % x
             print('{} -> {}'.format(arab[x], rm[x]))
             print('test %s is passed' % str(x+1))
         
         print('All tests is passed!')
+    tests()
